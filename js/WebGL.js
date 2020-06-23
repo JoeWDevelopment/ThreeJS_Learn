@@ -20,7 +20,9 @@ controls.dampingFactor = 0.1;
 createbaseScene();
 
 camera.position.z = 13;
-camera.position.y = 5;
+camera.position.y = 8;
+
+controls.target = new THREE.Vector3( 0, 6, 0 );
 //controls.update();
 
 var amblight = new THREE.AmbientLight( 0x404040 ); // soft white light
@@ -33,14 +35,14 @@ directionalLight.castShadow = true;
 //directionalLight.shadowCameraVisible = true;
 scene.add( directionalLight );
 
-/*
-directionalLight.shadow.mapSize.width = 512;  // default
-directionalLight.shadow.mapSize.height = 512; // default
-directionalLight.shadow.camera.near = 0.5;    // default
-directionalLight.shadow.camera.far = 500;     // default
-*/
 
-directionalLight.shadow.camera = new THREE.OrthographicCamera( -40, 40, 40, -40, 0.001, 3000);
+directionalLight.shadow.mapSize.width = 1024;  // default
+directionalLight.shadow.mapSize.height = 1024; // default
+//directionalLight.shadow.camera.near = 0.5;    // default
+//directionalLight.shadow.camera.far = 500;     // default
+
+
+directionalLight.shadow.camera = new THREE.OrthographicCamera( -20, 20, 20, -20, 0.0001, 40);
 
 loadModel();
 //addLight();
@@ -89,9 +91,18 @@ function loadModel()
         house = gltf.scene;
         scene.add( house );
         var newmaterial = new THREE.MeshPhongMaterial( { color: 0xffaa00 } );
-        house.material = newmaterial;
-        house.castShadow = true;
-        house.receiveShadow = true;
+
+        house.traverse( function ( child ) 
+        {
+            if ( child.isMesh ) 
+            {
+                child.material = newmaterial;
+                child.castShadow = true;
+                child.receiveShadow = true;
+            //    //child.material.envMap = exrCubeRenderTarget.texture;
+            }
+        });
+
         house.position.set(0,0,0);
     },
     // called while loading is progressing
