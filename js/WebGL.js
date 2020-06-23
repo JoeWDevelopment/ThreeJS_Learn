@@ -96,7 +96,7 @@ function loadModel()
         {
             if ( child.isMesh ) 
             {
-                child.material = newmaterial;
+                //child.material = newmaterial;
                 child.castShadow = true;
                 child.receiveShadow = true;
             //    //child.material.envMap = exrCubeRenderTarget.texture;
