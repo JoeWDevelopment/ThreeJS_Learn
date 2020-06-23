@@ -88,7 +88,6 @@ function loadModel()
 
         house = gltf.scene;
         scene.add( house );
-        render();
         var newmaterial = new THREE.MeshPhongMaterial( { color: 0xffaa00 } );
         house.material = newmaterial;
         house.castShadow = true;
