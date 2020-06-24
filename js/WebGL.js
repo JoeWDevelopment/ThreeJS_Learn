@@ -20,8 +20,9 @@ controls.dampingFactor = 0.1;
 
 createbaseScene();
 
-camera.position.z = 13;
+camera.position.z = -4;
 camera.position.y = 8;
+camera.position.x = 13;
 
 controls.target = new THREE.Vector3( 0, 6, 0 );
 //controls.update();
@@ -72,7 +73,7 @@ function animate()
 
     if (house != undefined)
     {
-    house.rotation.y += 0.01;
+    //house.rotation.y += 0.01;
     }
     renderer.render( scene, camera );
 }
@@ -131,6 +132,7 @@ function loadModel()
                 }
                 child.castShadow = true;
                 child.receiveShadow = true;
+                child.material.envMap = exrCubeRenderTarget.texture;
             }
         });
 
