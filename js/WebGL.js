@@ -170,6 +170,32 @@ function loadModel()
     } );
 }
 
+var loader = new THREE.GLTFLoader();
+
+loader.load( 'model/Cove.gltf', function ( gltf ) {
+
+    var cove = gltf.scene;
+    scene.add( cove );
+
+    cove.traverse( function ( child ) 
+    {
+        if ( child.isMesh ) 
+        {
+            child.castShadow = true;
+            child.receiveShadow = true;
+            //child.material.roughness = 0;
+        }
+    });
+
+    cove.position.set(0,0,0);
+},
+// called while loading is progressing
+function ( xhr ) {
+    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+}, undefined, function ( error ) {
+    console.error( error );
+} );
+
 function addLight()
 {
     var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
