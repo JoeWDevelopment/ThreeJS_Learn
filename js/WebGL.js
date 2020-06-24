@@ -1,6 +1,6 @@
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 3000 );
-var cube;
+//var cube;
 var house;
 var exrCubeRenderTarget;
 
@@ -67,8 +67,8 @@ function animate()
     requestAnimationFrame( animate );
 
     controls.update(); 
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
+    //cube.rotation.x += 0.01;
+    //cube.rotation.y += 0.01;
 
     if (house != undefined)
     {
@@ -79,6 +79,7 @@ function animate()
 
 function createbaseScene()
 {
+    /*
     var geometry = new THREE.PlaneGeometry(50,50);
     var material = new THREE.MeshPhongMaterial( { color: 0xf3c9ff } );
     var plane = new THREE.Mesh( geometry, material );
@@ -94,6 +95,7 @@ function createbaseScene()
     scene.add( cube );
     cube.castShadow = true;
     cube.receiveShadow = true;
+    */
 }
 
 function loadModel()
@@ -107,7 +109,7 @@ function loadModel()
 
         var GlassMaterial = new THREE.MeshPhysicalMaterial( {
             map: null,
-            color: 0x0000ff,
+            color: 0xDDDDFF,
             metalness: 0,
             roughness: 0,
             opacity: 0.25,
@@ -129,7 +131,6 @@ function loadModel()
                 }
                 child.castShadow = true;
                 child.receiveShadow = true;
-            //    //child.material.envMap = exrCubeRenderTarget.texture;
             }
         });
 
