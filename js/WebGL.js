@@ -1,8 +1,14 @@
+//const { AddOperation } = require("./three");
+
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 50 , window.innerWidth / window.innerHeight, 0.1, 3000 );
 //var cube;
 var house;
 var exrCubeRenderTarget;
+var particle;
+
+var ShowModelledInfinityCove = true;
+var ShowParticles = false;
 
 var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -49,39 +55,12 @@ camera.position.x = 18;
 controls.target = new THREE.Vector3( 0, 5, 0 );
 //controls.update();
 
-var amblight = new THREE.AmbientLight( 0x404040 ); // soft white light
-scene.add( amblight );
+createEnvironmentMapTexture();
 
-var directionalLight = new THREE.DirectionalLight( 0xffffff, 1,100 );
-directionalLight.position.set(3,3,1)
-directionalLight.castShadow = true;
-directionalLight.shadow.mapSize.width = 512;  // default
-directionalLight.shadow.mapSize.height = 512; // default
-directionalLight.shadow.camera = new THREE.OrthographicCamera( -20, 20, 20, -20, 0.001, 60);
-scene.add( directionalLight );
-
-
-//ENV
-THREE.DefaultLoadingManager.onLoad = function ( ) {
-    pmremGenerator.dispose();
-};
-new THREE.EXRLoader()
-    .setDataType( THREE.FloatType )
-    .load( 'tex/GSG_PRO_STUDIOS_METAL_043_sm.exr', function ( texture ) {
-
-        exrCubeRenderTarget = pmremGenerator.fromEquirectangular( texture );
-        exrBackground = exrCubeRenderTarget.texture;
-
-        texture.dispose();
-    } );
-
-var pmremGenerator = new THREE.PMREMGenerator( renderer );
-pmremGenerator.compileEquirectangularShader();
-//ENV
-
+addLights();
 loadModel();
-//addLight();
-
+if (ShowModelledInfinityCove) {loadCove();}
+if (ShowParticles) {addParticles();}
 
 animate();
 
@@ -89,13 +68,17 @@ function animate()
 {
     requestAnimationFrame( animate );
 
-    controls.update(); 
-    //cube.rotation.x += 0.01;
-    //cube.rotation.y += 0.01;
 
+    controls.update(); 
+    
     if (house != undefined)
     {
     //house.rotation.y += 0.01;
+    }
+
+    if (ShowParticles)
+    {
+    particle.rotation.y -= 0.0040;
     }
     renderer.render( scene, camera );
 }
@@ -119,6 +102,41 @@ function createbaseScene()
     cube.castShadow = true;
     cube.receiveShadow = true;
     */
+}
+
+function createEnvironmentMapTexture()
+{
+//ENV
+THREE.DefaultLoadingManager.onLoad = function ( ) {
+    pmremGenerator.dispose();
+};
+new THREE.EXRLoader()
+    .setDataType( THREE.FloatType )
+    .load( 'tex/GSG_PRO_STUDIOS_METAL_043_sm.exr', function ( texture ) {
+
+        exrCubeRenderTarget = pmremGenerator.fromEquirectangular( texture );
+        exrBackground = exrCubeRenderTarget.texture;
+
+        texture.dispose();
+    } );
+
+var pmremGenerator = new THREE.PMREMGenerator( renderer );
+pmremGenerator.compileEquirectangularShader();
+//ENV
+}
+
+function addLights()
+{
+var amblight = new THREE.AmbientLight( 0x404040 ); // soft white light
+scene.add( amblight );
+
+var directionalLight = new THREE.DirectionalLight( 0xffffff, 1,100 );
+directionalLight.position.set(3,3,1)
+directionalLight.castShadow = true;
+directionalLight.shadow.mapSize.width = 512;  // default
+directionalLight.shadow.mapSize.height = 512; // default
+directionalLight.shadow.camera = new THREE.OrthographicCamera( -20, 20, 20, -20, 0.001, 60);
+scene.add( directionalLight );
 }
 
 function loadModel()
@@ -150,12 +168,16 @@ function loadModel()
                 if (child.material.name.toLowerCase() == "glass")
                 {
                     child.material = GlassMaterial;
-                    //child.material.envMap = exrCubeRenderTarget.texture;
+                    child.material.envMap = exrCubeRenderTarget.texture;
+                }
+                if (child.material.name.toLowerCase() == "chrome")
+                {
+                    child.material.envMap = exrCubeRenderTarget.texture;
+                    child.material.envMapIntensity = 1;
                 }
                 child.castShadow = true;
                 child.receiveShadow = true;
                 child.material.envMap = exrCubeRenderTarget.texture;
-                child.material.envMapIntensity = 1;
                 //child.material.roughness = 0;
             }
         });
@@ -170,6 +192,9 @@ function loadModel()
     } );
 }
 
+
+function loadCove()
+{
 var loader = new THREE.GLTFLoader();
 
 loader.load( 'model/Cove.gltf', function ( gltf ) {
@@ -181,7 +206,7 @@ loader.load( 'model/Cove.gltf', function ( gltf ) {
     {
         if ( child.isMesh ) 
         {
-            child.castShadow = true;
+            //child.castShadow = true;
             child.receiveShadow = true;
             //child.material.roughness = 0;
         }
@@ -195,9 +220,23 @@ function ( xhr ) {
 }, undefined, function ( error ) {
     console.error( error );
 } );
+}
 
-function addLight()
+function addParticles()
 {
-    var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
-    scene.add( directionalLight );
+particle = new THREE.Object3D();
+scene.add(particle);
+var geometry = new THREE.TetrahedronGeometry(.1, 0);
+var material = new THREE.MeshPhongMaterial({
+    color: 0x4DAEC2,
+    shading: THREE.FlatShading
+  });
+
+for (var i = 0; i < 400; i++) {
+    var mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
+    mesh.position.multiplyScalar(5 + (Math.random() * 50));
+    mesh.rotation.set(Math.random() * 2, Math.random() * 2, Math.random() * 2);
+    particle.add(mesh);
+  }
 }
