@@ -2,6 +2,7 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 3000 );
 var cube;
 var house;
+var exrCubeRenderTarget;
 
 var renderer = new THREE.WebGLRenderer({ antialias: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -28,24 +29,37 @@ controls.target = new THREE.Vector3( 0, 6, 0 );
 var amblight = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( amblight );
 
-
 var directionalLight = new THREE.DirectionalLight( 0xffffff, 1,100 );
 directionalLight.position.set(3,3,1)
 directionalLight.castShadow = true;
-//directionalLight.shadowCameraVisible = true;
+directionalLight.shadow.mapSize.width = 512;  // default
+directionalLight.shadow.mapSize.height = 512; // default
+directionalLight.shadow.camera = new THREE.OrthographicCamera( -20, 20, 20, -20, 0.001, 60);
 scene.add( directionalLight );
 
 
-directionalLight.shadow.mapSize.width = 1024;  // default
-directionalLight.shadow.mapSize.height = 1024; // default
-//directionalLight.shadow.camera.near = 0.5;    // default
-//directionalLight.shadow.camera.far = 500;     // default
+//ENV
+THREE.DefaultLoadingManager.onLoad = function ( ) {
+    pmremGenerator.dispose();
+};
+new THREE.EXRLoader()
+    .setDataType( THREE.FloatType )
+    .load( 'tex/GSG_PRO_STUDIOS_METAL_043_sm.exr', function ( texture ) {
 
+        exrCubeRenderTarget = pmremGenerator.fromEquirectangular( texture );
+        exrBackground = exrCubeRenderTarget.texture;
 
-directionalLight.shadow.camera = new THREE.OrthographicCamera( -20, 20, 20, -20, 0.0001, 40);
+        texture.dispose();
+    } );
+
+var pmremGenerator = new THREE.PMREMGenerator( renderer );
+pmremGenerator.compileEquirectangularShader();
+//ENV
 
 loadModel();
 //addLight();
+
+
 animate();
 
 function animate() 
@@ -111,6 +125,7 @@ function loadModel()
                 if (child.material.name.toLowerCase() == "glass")
                 {
                     child.material = GlassMaterial;
+                    child.material.envMap = exrCubeRenderTarget.texture;
                 }
                 child.castShadow = true;
                 child.receiveShadow = true;
