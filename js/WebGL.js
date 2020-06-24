@@ -1,5 +1,5 @@
 var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 3000 );
+var camera = new THREE.PerspectiveCamera( 50 , window.innerWidth / window.innerHeight, 0.1, 3000 );
 //var cube;
 var house;
 var exrCubeRenderTarget;
@@ -8,6 +8,19 @@ var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.gammaOutput = true;
 renderer.gammaFactor = 2.2;
+
+
+window.addEventListener( 'resize', onWindowResize, false );
+
+function onWindowResize(){
+
+camera.aspect = window.innerWidth / window.innerHeight;
+camera.updateProjectionMatrix();
+
+renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+
 //shadows
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
@@ -18,12 +31,20 @@ document.body.appendChild( renderer.domElement );
 var controls = new THREE.OrbitControls( camera, renderer.domElement );
 controls.enableDamping = true;
 controls.dampingFactor = 0.1;
+controls.enablePan = false;
+controls.enableRotate = true;
+controls.enableZoom = false
+var piAngle = (Math.PI/180);
+controls.maxAzimuthAngle = piAngle*180;//Azimuth angle is measured from 0 to pi (for some reason)
+controls.minAzimuthAngle = piAngle*0;
+controls.maxPolarAngle = piAngle*100;
+
 
 createbaseScene();
 
-camera.position.z = -4;
+camera.position.z = -5;
 camera.position.y = 8;
-camera.position.x = 13;
+camera.position.x = 18;
 
 controls.target = new THREE.Vector3( 0, 5, 0 );
 //controls.update();
