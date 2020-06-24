@@ -4,13 +4,14 @@ var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHe
 var house;
 var exrCubeRenderTarget;
 
-var renderer = new THREE.WebGLRenderer({ antialias: true});
+var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.gammaOutput = true;
 renderer.gammaFactor = 2.2;
 //shadows
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+renderer.setClearColor(0x000000, 0);
 //
 document.body.appendChild( renderer.domElement );
 
@@ -24,7 +25,7 @@ camera.position.z = -4;
 camera.position.y = 8;
 camera.position.x = 13;
 
-controls.target = new THREE.Vector3( 0, 6, 0 );
+controls.target = new THREE.Vector3( 0, 5, 0 );
 //controls.update();
 
 var amblight = new THREE.AmbientLight( 0x404040 ); // soft white light
@@ -110,7 +111,7 @@ function loadModel()
 
         var GlassMaterial = new THREE.MeshPhysicalMaterial( {
             map: null,
-            color: 0xDDDDFF,
+            color: 0x1A1A1A,
             metalness: 0,
             roughness: 0,
             opacity: 0.25,
@@ -128,11 +129,13 @@ function loadModel()
                 if (child.material.name.toLowerCase() == "glass")
                 {
                     child.material = GlassMaterial;
-                    child.material.envMap = exrCubeRenderTarget.texture;
+                    //child.material.envMap = exrCubeRenderTarget.texture;
                 }
                 child.castShadow = true;
                 child.receiveShadow = true;
                 child.material.envMap = exrCubeRenderTarget.texture;
+                child.material.envMapIntensity = 1;
+                //child.material.roughness = 0;
             }
         });
 
