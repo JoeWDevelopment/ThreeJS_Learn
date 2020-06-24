@@ -90,13 +90,28 @@ function loadModel()
 
         house = gltf.scene;
         scene.add( house );
-        var newmaterial = new THREE.MeshPhongMaterial( { color: 0xffaa00 } );
+
+        var GlassMaterial = new THREE.MeshPhysicalMaterial( {
+            map: null,
+            color: 0x0000ff,
+            metalness: 0,
+            roughness: 0,
+            opacity: 0.25,
+            side: THREE.FrontSide,
+            transparent: true,
+            envMapIntensity: 10,
+            premultipliedAlpha: true
+            } );
 
         house.traverse( function ( child ) 
         {
             if ( child.isMesh ) 
             {
                 //child.material = newmaterial;
+                if (child.material.name.toLowerCase() == "glass")
+                {
+                    child.material = GlassMaterial;
+                }
                 child.castShadow = true;
                 child.receiveShadow = true;
             //    //child.material.envMap = exrCubeRenderTarget.texture;
