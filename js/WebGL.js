@@ -1,59 +1,47 @@
 //const { AddOperation } = require("./three");
 
+//VARS------------------------------
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 50 , window.innerWidth / window.innerHeight, 0.1, 3000 );
-//var cube;
 var house;
+var cove;
 var exrCubeRenderTarget;
 var particle;
+var orbitcontrols
 
 var ShowModelledInfinityCove = true;
 var ShowParticles = false;
+//------------------------------
+
+createButton();
 
 var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.gammaOutput = true;
 renderer.gammaFactor = 2.2;
 
-
 window.addEventListener( 'resize', onWindowResize, false );
-
 function onWindowResize(){
-
 camera.aspect = window.innerWidth / window.innerHeight;
 camera.updateProjectionMatrix();
-
 renderer.setSize( window.innerWidth, window.innerHeight );
 }
+document.body.appendChild( renderer.domElement );
 
-
-//shadows
+//SHADOWS------------------------------
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 renderer.setClearColor(0x000000, 0);
-//
-document.body.appendChild( renderer.domElement );
-
-var controls = new THREE.OrbitControls( camera, renderer.domElement );
-controls.enableDamping = true;
-controls.dampingFactor = 0.1;
-controls.enablePan = false;
-controls.enableRotate = true;
-controls.enableZoom = false
-var piAngle = (Math.PI/180);
-controls.maxAzimuthAngle = piAngle*180;//Azimuth angle is measured from 0 to pi (for some reason)
-controls.minAzimuthAngle = piAngle*0;
-controls.maxPolarAngle = piAngle*100;
+//------------------------------
 
 
-createbaseScene();
-
+//CAMERA------------------------------
 camera.position.z = -5;
 camera.position.y = 8;
 camera.position.x = 18;
+//------------------------------
 
-controls.target = new THREE.Vector3( 0, 5, 0 );
-//controls.update();
+setupOrbitControls();
 
 createEnvironmentMapTexture();
 
@@ -64,65 +52,78 @@ if (ShowParticles) {addParticles();}
 
 animate();
 
+
+
+//FUNCTIONS------------------------------//FUNCTIONS------------------------------//FUNCTIONS------------------------------
+
 function animate() 
 {
     requestAnimationFrame( animate );
+    orbitcontrols.update(); 
 
+    animateOptionals();
 
-    controls.update(); 
-    
-    if (house != undefined)
-    {
-    //house.rotation.y += 0.01;
-    }
-
-    if (ShowParticles)
-    {
-    particle.rotation.y -= 0.0040;
-    }
     renderer.render( scene, camera );
 }
 
-function createbaseScene()
+function createButton()
 {
-    /*
-    var geometry = new THREE.PlaneGeometry(50,50);
-    var material = new THREE.MeshPhongMaterial( { color: 0xf3c9ff } );
-    var plane = new THREE.Mesh( geometry, material );
-    plane.rotation.set(Math.PI / -2, 0, 0)
-    scene.add( plane );
-    plane.castShadow = false;
-    plane.receiveShadow = true;
+var Covebutton = document.createElement("button");
+Covebutton.innerHTML = "Toggle Cove";
+var body = document.getElementsByTagName("body")[0];
+body.appendChild(Covebutton);
 
-    var geometry = new THREE.BoxGeometry();
-    var material = new THREE.MeshPhongMaterial( { color: 0x00DDFF } );
-    cube = new THREE.Mesh( geometry, material );
-    cube.position.set(0,2,0);
-    scene.add( cube );
-    cube.castShadow = true;
-    cube.receiveShadow = true;
-    */
+Covebutton.addEventListener ("click", function() {
+    ShowModelledInfinityCove = !ShowModelledInfinityCove;
+});
+}
+
+function setupOrbitControls()
+{
+    orbitcontrols = new THREE.OrbitControls( camera, renderer.domElement );
+    orbitcontrols.enableDamping = true;
+    orbitcontrols.dampingFactor = 0.1;
+    orbitcontrols.enablePan = false;
+    orbitcontrols.enableRotate = true;
+    orbitcontrols.enableZoom = false
+    var piAngle = (Math.PI/180);
+    orbitcontrols.maxAzimuthAngle = piAngle*180;//Azimuth angle is measured from 0 to pi (for some reason)
+    orbitcontrols.minAzimuthAngle = piAngle*0;
+    orbitcontrols.maxPolarAngle = piAngle*100;
+
+    orbitcontrols.target = new THREE.Vector3( 0, 5, 0 );
+}
+
+function animateOptionals()
+{
+    if (cove != undefined){cove.visible = ShowModelledInfinityCove;}
+
+    //if (house != undefined){house.rotation.y += 0.01;}
+
+    if (ShowParticles){particle.rotation.y -= 0.0040;}
 }
 
 function createEnvironmentMapTexture()
 {
-//ENV
-THREE.DefaultLoadingManager.onLoad = function ( ) {
+//ENV------------------------------
+THREE.DefaultLoadingManager.onLoad = function ( ) 
+{
     pmremGenerator.dispose();
 };
 new THREE.EXRLoader()
     .setDataType( THREE.FloatType )
-    .load( 'tex/GSG_PRO_STUDIOS_METAL_043_sm.exr', function ( texture ) {
+    .load( 'tex/GSG_PRO_STUDIOS_METAL_043_sm.exr', function ( texture ) 
+    {
 
         exrCubeRenderTarget = pmremGenerator.fromEquirectangular( texture );
         exrBackground = exrCubeRenderTarget.texture;
 
         texture.dispose();
-    } );
+    });
 
 var pmremGenerator = new THREE.PMREMGenerator( renderer );
 pmremGenerator.compileEquirectangularShader();
-//ENV
+////------------------------------
 }
 
 function addLights()
@@ -186,7 +187,7 @@ function loadModel()
     },
     // called while loading is progressing
     function ( xhr ) {
-        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        console.log("TownHouse "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     }, undefined, function ( error ) {
         console.error( error );
     } );
@@ -199,7 +200,7 @@ var loader = new THREE.GLTFLoader();
 
 loader.load( 'model/Cove.gltf', function ( gltf ) {
 
-    var cove = gltf.scene;
+    cove = gltf.scene;
     scene.add( cove );
 
     cove.traverse( function ( child ) 
@@ -216,7 +217,7 @@ loader.load( 'model/Cove.gltf', function ( gltf ) {
 },
 // called while loading is progressing
 function ( xhr ) {
-    console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    console.log("Cove "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
 }, undefined, function ( error ) {
     console.error( error );
 } );
@@ -240,3 +241,5 @@ for (var i = 0; i < 400; i++) {
     particle.add(mesh);
   }
 }
+
+//---------------------------------------//--------------------------------------//-------------------------------------
