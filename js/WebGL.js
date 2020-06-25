@@ -13,7 +13,7 @@ var ShowModelledInfinityCove = true;
 var ShowParticles = false;
 //------------------------------
 
-createButton();
+createButtons();
 
 var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -47,7 +47,7 @@ createEnvironmentMapTexture();
 
 addLights();
 loadModel();
-if (ShowModelledInfinityCove) {loadCove();}
+if (ShowModelledInfinityCove) {loadCove((0));}
 if (ShowParticles) {addParticles();}
 
 animate();
@@ -66,7 +66,7 @@ function animate()
     renderer.render( scene, camera );
 }
 
-function createButton()
+function createButtons()
 {
 var Covebutton = document.createElement("button");
 Covebutton.innerHTML = "Toggle Cove";
@@ -76,6 +76,34 @@ body.appendChild(Covebutton);
 Covebutton.addEventListener ("click", function() {
     ShowModelledInfinityCove = !ShowModelledInfinityCove;
 });
+
+var Covebutton1 = document.createElement("button");
+Covebutton1.innerHTML = "Cove 1";
+var body = document.getElementsByTagName("body")[0];
+body.appendChild(Covebutton1);
+
+Covebutton1.addEventListener ("click", function() {
+    loadCove(0);
+});
+
+var Covebutton2 = document.createElement("button");
+Covebutton2.innerHTML = "Cove 2";
+var body = document.getElementsByTagName("body")[0];
+body.appendChild(Covebutton2);
+
+Covebutton2.addEventListener ("click", function() {
+    loadCove(1);
+});
+
+var Covebutton3 = document.createElement("button");
+Covebutton3.innerHTML = "Cove 3";
+var body = document.getElementsByTagName("body")[0];
+body.appendChild(Covebutton3);
+
+Covebutton3.addEventListener ("click", function() {
+    loadCove(2);
+});
+
 }
 
 function setupOrbitControls()
@@ -194,11 +222,70 @@ function loadModel()
 }
 
 
-function loadCove()
+function loadCove(coveToLoad)
+{
+    if (cove != undefined)
+    {
+        cove.traverse( function ( child ) 
+        {
+            if ( child.isMesh ) 
+            {
+                cove.remove(child);// child.remove();
+            }
+        });
+    }
+
+    var coveAddress = 'model/Cove.gltf';
+    switch(coveToLoad)
+    {
+        case 0:
+            coveAddress= 'model/Cove.gltf';
+        break;
+        case 1:
+            coveAddress= 'model/Cove2.gltf';
+        break
+        case 2:
+            coveAddress= 'model/Cove3.gltf';
+        break;
+    }
+
+    var loader = new THREE.GLTFLoader();
+
+loader.load( coveAddress, function ( gltf ) {
+
+    cove = gltf.scene;
+    scene.add( cove );
+
+    cove.traverse( function ( child ) 
+    {
+        if ( child.isMesh ) 
+        {
+            //child.castShadow = true;
+            child.receiveShadow = true;
+            //child.material.roughness = 0;
+        }
+    });
+
+        cove.position.set(0,0,0);
+    },
+    // called while loading is progressing
+    function ( xhr ) {
+        console.log("Cove "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    }, undefined, function ( error ) {
+        console.error( error );
+    } );
+}
+
+
+
+
+
+
+function loadCoveOld()
 {
 var loader = new THREE.GLTFLoader();
 
-loader.load( 'model/Cove.gltf', function ( gltf ) {
+loader.load( 'model/Cove3.gltf', function ( gltf ) {
 
     cove = gltf.scene;
     scene.add( cove );
