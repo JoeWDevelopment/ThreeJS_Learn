@@ -1,5 +1,8 @@
 //const { AddOperation } = require("./three");
 
+var projVersion = "0.4.1";
+console.log("%c Project Version: "+projVersion, "background: #222; color: #bada55");
+
 //VARS------------------------------
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 50 , window.innerWidth / window.innerHeight, 0.1, 3000 );
