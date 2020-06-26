@@ -292,9 +292,9 @@ function loadModel()
                     child.material.envMap = exrCubeRenderTarget.texture;
                 }
 
-                child.castShadow = true;
+                //child.castShadow = true;
                 //child.receiveShadow = true;
-                child.material.envMap = exrCubeRenderTarget.texture;
+                //child.material.envMap = exrCubeRenderTarget.texture;
                 //child.material.roughness = 0;
             }
         });
