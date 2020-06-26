@@ -1,6 +1,6 @@
 //const { AddOperation } = require("./three");
 
-var projVersion = "0.4.3";
+var projVersion = "0.4.4";
 console.log("%c Project Version: "+projVersion, "background: #222; color: #bada55");
 
 //VARS------------------------------
