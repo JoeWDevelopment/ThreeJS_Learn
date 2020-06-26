@@ -1,6 +1,6 @@
 //const { AddOperation } = require("./three");
 
-var projVersion = "0.4.2";
+var projVersion = "0.4.3";
 console.log("%c Project Version: "+projVersion, "background: #222; color: #bada55");
 
 //VARS------------------------------
@@ -20,6 +20,13 @@ var floorDisc;
 var ShowModelledInfinityCove = true;
 var ShowFloorDisc = true;
 var ShowParticles = false;
+
+var ObjsToLoad = 3;
+var ObjsLoaded = 0;
+
+var load1Percent = 0, load2Percent = 0, load3Percent = 0;
+var loadPercent =0;
+var loadCompleted = false;
 //------------------------------
 
 createButtons();
@@ -35,7 +42,6 @@ camera.aspect = window.innerWidth / window.innerHeight;
 camera.updateProjectionMatrix();
 renderer.setSize( window.innerWidth, window.innerHeight );
 }
-document.body.appendChild( renderer.domElement );
 
 /*/SHADOWS------------------------------
 renderer.shadowMap.enabled = true;
@@ -74,6 +80,17 @@ animate();
 
 function animate() 
 {
+if (ObjsLoaded >= ObjsToLoad && loadCompleted == false)
+{
+    console.log("Loading Complete");
+    loadCompleted = true;
+    document.body.appendChild( renderer.domElement );
+}
+if (!loadCompleted)
+{
+    loadPercent = (load1Percent+load2Percent+load3Percent) / 3;
+    console.log("Loading... "+loadPercent+"%");
+}
     requestAnimationFrame( animate );
     orbitcontrols.update(); 
 
@@ -256,12 +273,12 @@ function loadModel()
 
             if ( child.isMesh ) 
             {
-                console.log(child.name+" : "+child.material.name);
+                //console.log(child.name+" : "+child.material.name);
                 switch (child.material.name.toLowerCase())
                 {
                     case "floor":
                         child.material.metalness = 0;
-                        child.material.roughness = .1;
+                        child.material.roughness = .2;
                         child.material.envMap = exrCubeRenderTarget.texture;
                         child.material.envMapIntensity = .4;
                     break;
@@ -315,10 +332,12 @@ function loadModel()
         });
 
         house.position.set(0,0,0);
+        ObjsLoaded+=1;
     },
     // called while loading is progressing
     function ( xhr ) {
         console.log("TownHouse "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        load1Percent = xhr.loaded / xhr.total * 100;
     }, undefined, function ( error ) {
         console.error( error );
     } );
@@ -370,16 +389,18 @@ loader.load( coveAddress, function ( gltf ) {
             child.material.map = coveMap;
             child.material.emissiveMap = coveMap;
             child.material.emissive.setRGB(1,1,1); 
-            console.log(child.material);
+            //console.log(child.material);
             //child.material.roughness = 0;
         }
     });
 
         cove.position.set(0,0,0);
+        ObjsLoaded+=1;
     },
     // called while loading is progressing
     function ( xhr ) {
         console.log("Cove "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        load2Percent = xhr.loaded / xhr.total * 100;
     }, undefined, function ( error ) {
         console.error( error );
     } );
@@ -422,11 +443,13 @@ loader.load( discAddress, function ( gltf ) {
     });
 
     floorDisc.position.set(0,.001,0);
+    ObjsLoaded+=1;
     //disc.scale.set(5,5,5);
     },
     // called while loading is progressing
     function ( xhr ) {
         console.log("floorDisc "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        load3Percent = xhr.loaded / xhr.total * 100;
     }, undefined, function ( error ) {
         console.error( error );
     } );
@@ -456,10 +479,12 @@ loader.load( 'model/Cove3.gltf', function ( gltf ) {
     });
 
     cove.position.set(0,0,0);
+    ObjsLoaded+=1;
 },
 // called while loading is progressing
 function ( xhr ) {
     console.log("Cove "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    load3Percent = xhr.loaded / xhr.total * 100;
 }, undefined, function ( error ) {
     console.error( error );
 } );
