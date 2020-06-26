@@ -26,6 +26,7 @@ var ObjsLoaded = 0;
 
 var load1Percent = 0, load2Percent = 0, load3Percent = 0;
 var loadPercent =0;
+var lastLoadPercent = -1;
 var loadCompleted = false;
 //------------------------------
 
@@ -43,6 +44,7 @@ camera.updateProjectionMatrix();
 renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
+document.body.appendChild( renderer.domElement );
 /*/SHADOWS------------------------------
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
@@ -75,7 +77,6 @@ loadFloorDisc();
 animate();
 
 
-
 //FUNCTIONS------------------------------//FUNCTIONS------------------------------//FUNCTIONS------------------------------
 
 function animate() 
@@ -84,12 +85,20 @@ if (ObjsLoaded >= ObjsToLoad && loadCompleted == false)
 {
     console.log("Loading Complete");
     loadCompleted = true;
-    document.body.appendChild( renderer.domElement );
+      // hide the loading bar
+    const loadingElem = document.querySelector('#loading');
+    loadingElem.style.display = 'none';
+
 }
 if (!loadCompleted)
 {
     loadPercent = (load1Percent+load2Percent+load3Percent) / 3;
-    console.log("Loading... "+loadPercent+"%");
+    if (loadPercent > lastLoadPercent)
+    {
+    lastLoadPercent = loadPercent;
+    console.log("Loading... "+loadPercent+"%");  
+    const loadingElem = document.querySelector('#loading').innerHTML = "...loading..."+loadPercent+"%";
+    }
 }
     requestAnimationFrame( animate );
     orbitcontrols.update(); 
@@ -399,6 +408,7 @@ loader.load( coveAddress, function ( gltf ) {
     },
     // called while loading is progressing
     function ( xhr ) {
+        console.log(xhr);
         console.log("Cove "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
         load2Percent = xhr.loaded / xhr.total * 100;
     }, undefined, function ( error ) {
