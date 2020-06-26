@@ -9,6 +9,8 @@ var exrCubeRenderTarget;
 var particle;
 var orbitcontrols
 
+var directionalLight;
+
 var ShowModelledInfinityCove = true;
 var ShowParticles = false;
 //------------------------------
@@ -49,6 +51,7 @@ addLights();
 loadModel();
 if (ShowModelledInfinityCove) {loadCove((0));}
 if (ShowParticles) {addParticles();}
+//loadFloorDisc();
 
 animate();
 
@@ -65,6 +68,32 @@ function animate()
 
     renderer.render( scene, camera );
 }
+
+var xSpeed = 0.1;
+var ySpeed = 0.1;
+
+document.addEventListener("keydown", onDocumentKeyDown, false);
+function onDocumentKeyDown(event) {
+    var keyCode = event.which;
+    if (keyCode == 87) {//W
+        directionalLight.position.y += ySpeed;
+    } else if (keyCode == 83) {//S
+        directionalLight.position.y -= ySpeed;
+    } else if (keyCode == 65) {//A
+        directionalLight.position.x -= xSpeed;
+    } else if (keyCode == 68) {//D
+        directionalLight.position.x += xSpeed;
+    } else if (keyCode == 81) {//Q
+        directionalLight.position.z -= xSpeed;
+    } else if (keyCode == 69) {//E
+        directionalLight.position.z += xSpeed;
+    } else if (keyCode == 32) {//Space
+        directionalLight.position.set(0, 0, 0);
+    }
+
+    console.log(directionalLight.position);
+    renderer.render( scene, camera );
+};
 
 function createButtons()
 {
@@ -159,8 +188,9 @@ function addLights()
 var amblight = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( amblight );
 
-var directionalLight = new THREE.DirectionalLight( 0xffffff, 1,100 );
-directionalLight.position.set(3,3,1)
+//Vector3 {x: 3.3000000000000003, y: 3.500000000000003, z: -2.900000000000001}
+directionalLight = new THREE.DirectionalLight( 0xffffff, 1,100 );
+directionalLight.position.set(3.3,3.5,-2.9)
 directionalLight.castShadow = true;
 directionalLight.shadow.mapSize.width = 512;  // default
 directionalLight.shadow.mapSize.height = 512; // default
@@ -171,8 +201,10 @@ scene.add( directionalLight );
 function loadModel()
 {
     var loader = new THREE.GLTFLoader();
+    //var loadUrl = 'model/townhouse01.gltf';
+    var loadUrl = 'model/Baked/townhouse01.gltf';
 
-    loader.load( 'model/townhouse01.gltf', function ( gltf ) {
+    loader.load(loadUrl , function ( gltf ) {
 
         house = gltf.scene;
         scene.add( house );
@@ -194,7 +226,7 @@ function loadModel()
             if ( child.isMesh ) 
             {
                 //child.material = newmaterial;
-                if (child.material.name.toLowerCase() == "glass")
+                if (child.material.name.toLowerCase() == "glass" || child.name.toLowerCase()== "glass")
                 {
                     child.material = GlassMaterial;
                     child.material.envMap = exrCubeRenderTarget.texture;
@@ -205,7 +237,7 @@ function loadModel()
                     child.material.envMapIntensity = 1;
                 }
                 child.castShadow = true;
-                child.receiveShadow = true;
+                //child.receiveShadow = true;
                 child.material.envMap = exrCubeRenderTarget.texture;
                 //child.material.roughness = 0;
             }
@@ -276,6 +308,56 @@ loader.load( coveAddress, function ( gltf ) {
     } );
 }
 
+
+function loadFloorDisc()
+{
+    /*
+    var DiscMaterial = new THREE.MeshPhysicalMaterial( {
+        map: null,
+        color: 0x1A1A1A,
+        metalness: 0,
+        roughness: 0,
+        opacity: 0.25,
+        side: THREE.FrontSide,
+        transparent: true,
+        envMapIntensity: 10,
+        premultipliedAlpha: true
+        } );
+*/
+       var discAddress = 'model/FloorDisc.gltf';
+    var loader = new THREE.GLTFLoader();
+
+loader.load( discAddress, function ( gltf ) {
+
+    var disc = gltf.scene;
+    scene.add( disc );
+
+    cove.traverse( function ( child ) 
+    {
+        if ( child.isMesh ) 
+        {
+            //child.castShadow = true;
+            child.receiveShadow = true;
+            //child.material = DiscMaterial;
+            //child.material.transparent= true;
+            child.material.alphaTest = 0.5;
+            //child.material.alphaMap = child.material.colorMap;//'model/CirclePlaneBW.png'
+            //child.material.colorMap = null;
+            //child.material.needsUpdate =  true;
+            //child.material.roughness = 0;
+        }
+    });
+
+    disc.position.set(0,1,0);
+    disc.scale.set(5,5,5);
+    },
+    // called while loading is progressing
+    function ( xhr ) {
+        console.log("disc "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    }, undefined, function ( error ) {
+        console.error( error );
+    } );
+}
 
 
 
