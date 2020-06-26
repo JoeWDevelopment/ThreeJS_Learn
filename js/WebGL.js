@@ -11,7 +11,11 @@ var particle;
 var orbitcontrols
 var directionalLight;
 
+var discMap;
+var floorDisc;
+
 var ShowModelledInfinityCove = true;
+var ShowFloorDisc = false;
 var ShowParticles = false;
 //------------------------------
 
@@ -57,7 +61,7 @@ addLights();
 loadModel();
 if (ShowModelledInfinityCove) {loadCove((0));}
 if (ShowParticles) {addParticles();}
-//loadFloorDisc();
+loadFloorDisc();
 
 animate();
 
@@ -112,6 +116,15 @@ Covebutton.addEventListener ("click", function() {
     ShowModelledInfinityCove = !ShowModelledInfinityCove;
 });
 
+var FloorDiscbutton = document.createElement("button");
+FloorDiscbutton.innerHTML = "Toggle FloorDisc";
+var body = document.getElementsByTagName("body")[0];
+body.appendChild(FloorDiscbutton);
+
+FloorDiscbutton.addEventListener ("click", function() {
+    ShowFloorDisc = !ShowFloorDisc;
+});
+
 var Covebutton1 = document.createElement("button");
 Covebutton1.innerHTML = "Cove 1";
 var body = document.getElementsByTagName("body")[0];
@@ -161,6 +174,8 @@ function animateOptionals()
 {
     if (cove != undefined){cove.visible = ShowModelledInfinityCove;}
 
+    if (floorDisc != undefined){floorDisc.visible = ShowFloorDisc;}
+
     //if (house != undefined){house.rotation.y += 0.01;}
 
     if (ShowParticles){particle.rotation.y -= 0.0040;}
@@ -197,7 +212,7 @@ scene.add( amblight );
 //Vector3 {x: 3.3000000000000003, y: 3.500000000000003, z: -2.900000000000001}
 directionalLight = new THREE.DirectionalLight( 0xffffff, 1,100 );
 directionalLight.position.set(3.3,3.5,-2.9)
-directionalLight.castShadow = true;
+//directionalLight.castShadow = true;
 directionalLight.shadow.mapSize.width = 512;  // default
 directionalLight.shadow.mapSize.height = 512; // default
 directionalLight.shadow.camera = new THREE.OrthographicCamera( -20, 20, 20, -20, 0.001, 60);
@@ -229,12 +244,10 @@ function loadModel()
 
         house.traverse( function ( child ) 
         {
-            console.log(child.name);
             if (child.name.toLowerCase() == "sun")
             {
                 directionalLight.position.copy(child.position);
                 house.remove(child);
-                //sphere.position.copy(child.position);
             }
 
             if ( child.isMesh ) 
@@ -325,49 +338,45 @@ loader.load( coveAddress, function ( gltf ) {
 
 function loadFloorDisc()
 {
-    /*
-    var DiscMaterial = new THREE.MeshPhysicalMaterial( {
-        map: null,
-        color: 0x1A1A1A,
-        metalness: 0,
-        roughness: 0,
-        opacity: 0.25,
-        side: THREE.FrontSide,
-        transparent: true,
-        envMapIntensity: 10,
-        premultipliedAlpha: true
-        } );
-*/
-       var discAddress = 'model/FloorDisc.gltf';
+    var discMap = new THREE.TextureLoader().load( 'model/CirclePlaneBW.png' );//'model/CirclePlaneBWInvert.png'//'model/CirclePlane.png'
+
+       var discAddress = 'model/Baked/FloorDisc.gltf';
     var loader = new THREE.GLTFLoader();
 
 loader.load( discAddress, function ( gltf ) {
 
-    var disc = gltf.scene;
-    scene.add( disc );
+    floorDisc = gltf.scene;
+    scene.add( floorDisc );
 
-    cove.traverse( function ( child ) 
+    floorDisc.traverse( function ( child ) 
     {
         if ( child.isMesh ) 
         {
+            console.log(child.material);
             child.castShadow = false;
-            child.receiveShadow = true;
-            //child.material = DiscMaterial;
-            //child.material.transparent= true;
-            child.material.alphaTest = 0.5;
+            child.material.transparent = true;
+            //child.material.alphaTest = 0.5;
+
+            //var discMap = new THREE.TextureLoader().load( 'model/CirclePlaneBW.png' );//'model/CirclePlaneBWInvert.png'//'model/CirclePlane.png'
+
+            child.material.alphaMap = discMap;
+            
+            //child.material.map.format = 1023;  // was reporting as 1022 (no alpha)
+			//child.material.needsUpdate=true;
             //child.material.alphaMap = child.material.colorMap;//'model/CirclePlaneBW.png'
             //child.material.colorMap = null;
-            //child.material.needsUpdate =  true;
+            child.material.needsUpdate =  true;
             //child.material.roughness = 0;
+            //console.log(child.material);
         }
     });
 
-    disc.position.set(0,1,0);
-    disc.scale.set(5,5,5);
+    //disc.position.set(0,1,0);
+    //disc.scale.set(5,5,5);
     },
     // called while loading is progressing
     function ( xhr ) {
-        console.log("disc "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        console.log("floorDisc "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     }, undefined, function ( error ) {
         console.error( error );
     } );
