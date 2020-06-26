@@ -256,6 +256,12 @@ function loadModel()
                 console.log(child.name+" : "+child.material.name);
                 switch (child.material.name.toLowerCase())
                 {
+                    case "floor":
+                        child.material.metalness = 0;
+                        child.material.roughness = .3;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = .3;
+                    break;
                     case "darkmetal":
                         child.material.metalness = 1;
                         child.material.roughness = .25;
