@@ -34,11 +34,11 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 }
 document.body.appendChild( renderer.domElement );
 
-//SHADOWS------------------------------
+/*/SHADOWS------------------------------
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 renderer.setClearColor(0x000000, 0);
-//------------------------------
+*///------------------------------
 
 
 //CAMERA------------------------------
@@ -190,9 +190,9 @@ THREE.DefaultLoadingManager.onLoad = function ( )
 };
 new THREE.EXRLoader()
     .setDataType( THREE.FloatType )
-    .load( 'tex/GSG_PRO_STUDIOS_METAL_043_sm.exr', function ( texture ) 
+    .load( 'tex/colourfull homes_15.00.exr', function ( texture ) //GSG_PRO_STUDIOS_METAL_043_sm.exr
     {
-
+        
         exrCubeRenderTarget = pmremGenerator.fromEquirectangular( texture );
         exrBackground = exrCubeRenderTarget.texture;
 
@@ -247,22 +247,49 @@ function loadModel()
             if (child.name.toLowerCase() == "sun")
             {
                 directionalLight.position.copy(child.position);
+                child.visible = false;
                 house.remove(child);
             }
 
             if ( child.isMesh ) 
             {
+                console.log(child.name+" : "+child.material.name);
+                switch (child.material.name.toLowerCase())
+                {
+                    case "darkmetal":
+                        child.material.metalness = 1;
+                        child.material.roughness = .25;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "kitchencolour":
+                        child.material.metalness = 1;
+                        child.material.roughness = 0.35;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "chrome":
+                        child.material.metalness = 1;
+                        child.material.roughness = 0;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "roof":
+                        child.material.metalness = 1;
+                        child.material.roughness = .25;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                                
+                }
+
                 //child.material = newmaterial;
                 if (child.material.name.toLowerCase() == "glass" || child.name.toLowerCase()== "glass")
                 {
                     child.material = GlassMaterial;
                     child.material.envMap = exrCubeRenderTarget.texture;
                 }
-                if (child.material.name.toLowerCase() == "chrome")
-                {
-                    child.material.envMap = exrCubeRenderTarget.texture;
-                    child.material.envMapIntensity = 1;
-                }
+
                 child.castShadow = true;
                 //child.receiveShadow = true;
                 child.material.envMap = exrCubeRenderTarget.texture;
@@ -358,7 +385,7 @@ loader.load( discAddress, function ( gltf ) {
     {
         if ( child.isMesh ) 
         {
-            console.log(child.material);
+           // console.log(child.material);
             child.castShadow = false;
             child.material.transparent = true;
             //child.material.alphaTest = 0.5;
@@ -377,7 +404,7 @@ loader.load( discAddress, function ( gltf ) {
         }
     });
 
-    //disc.position.set(0,1,0);
+    floorDisc.position.set(0,.001,0);
     //disc.scale.set(5,5,5);
     },
     // called while loading is progressing
