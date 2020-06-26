@@ -280,6 +280,12 @@ function loadModel()
                         child.material.envMap = exrCubeRenderTarget.texture;
                         child.material.envMapIntensity = 1;
                     break;
+                    case "ceramic":
+                        child.material.metalness = 1;
+                        child.material.roughness = .1;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
                     default:
 
                     break;
