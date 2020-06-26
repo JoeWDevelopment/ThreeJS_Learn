@@ -1,6 +1,6 @@
 //const { AddOperation } = require("./three");
 
-var projVersion = "0.4.4";
+var projVersion = "0.4.5";
 console.log("%c Project Version: "+projVersion, "background: #222; color: #bada55");
 
 //VARS------------------------------
@@ -403,7 +403,7 @@ loader.load( coveAddress, function ( gltf ) {
         }
     });
 
-        cove.position.set(0,0,0);
+        cove.position.set(0,-.3,0);
         ObjsLoaded+=1;
     },
     // called while loading is progressing
