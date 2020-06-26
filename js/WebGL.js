@@ -1,6 +1,6 @@
 //const { AddOperation } = require("./three");
 
-var projVersion = "0.4.1";
+var projVersion = "0.4.2";
 console.log("%c Project Version: "+projVersion, "background: #222; color: #bada55");
 
 //VARS------------------------------
@@ -62,7 +62,7 @@ createEnvironmentMapTexture();
 
 addLights();
 loadModel();
-if (ShowModelledInfinityCove) {loadCove((0));}
+if (ShowModelledInfinityCove) {loadCove((1));}
 if (ShowParticles) {addParticles();}
 loadFloorDisc();
 
@@ -261,9 +261,9 @@ function loadModel()
                 {
                     case "floor":
                         child.material.metalness = 0;
-                        child.material.roughness = .3;
+                        child.material.roughness = .1;
                         child.material.envMap = exrCubeRenderTarget.texture;
-                        child.material.envMapIntensity = .3;
+                        child.material.envMapIntensity = .4;
                     break;
                     case "darkmetal":
                         child.material.metalness = 1;
