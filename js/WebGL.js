@@ -15,7 +15,7 @@ var discMap;
 var floorDisc;
 
 var ShowModelledInfinityCove = true;
-var ShowFloorDisc = false;
+var ShowFloorDisc = true;
 var ShowParticles = false;
 //------------------------------
 
@@ -207,7 +207,7 @@ pmremGenerator.compileEquirectangularShader();
 function addLights()
 {
 var amblight = new THREE.AmbientLight( 0x404040 ); // soft white light
-scene.add( amblight );
+//scene.add( amblight );
 
 //Vector3 {x: 3.3000000000000003, y: 3.500000000000003, z: -2.900000000000001}
 directionalLight = new THREE.DirectionalLight( 0xffffff, 1,100 );
@@ -280,7 +280,9 @@ function loadModel()
                         child.material.envMap = exrCubeRenderTarget.texture;
                         child.material.envMapIntensity = 1;
                     break;
-                                
+                    default:
+
+                    break;
                 }
 
                 //child.material = newmaterial;
