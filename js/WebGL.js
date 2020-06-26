@@ -216,7 +216,7 @@ directionalLight.position.set(3.3,3.5,-2.9)
 directionalLight.shadow.mapSize.width = 512;  // default
 directionalLight.shadow.mapSize.height = 512; // default
 directionalLight.shadow.camera = new THREE.OrthographicCamera( -20, 20, 20, -20, 0.001, 60);
-scene.add( directionalLight );
+//scene.add( directionalLight );
 }
 
 function loadModel()
@@ -312,6 +312,8 @@ function loadCove(coveToLoad)
 
 loader.load( coveAddress, function ( gltf ) {
 
+    var coveMap = new THREE.TextureLoader().load( 'model/GreyGradient.jpg' );
+
     cove = gltf.scene;
     scene.add( cove );
 
@@ -321,6 +323,10 @@ loader.load( coveAddress, function ( gltf ) {
         {
             child.castShadow = false;
             child.receiveShadow = true;
+            child.material.map = coveMap;
+            child.material.emissiveMap = coveMap;
+            child.material.emissive.setRGB(1,1,1); 
+            console.log(child.material);
             //child.material.roughness = 0;
         }
     });
