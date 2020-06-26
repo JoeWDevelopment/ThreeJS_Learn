@@ -1,6 +1,6 @@
 //const { AddOperation } = require("./three");
 
-var projVersion = "0.4.5";
+var projVersion = "0.4.6";
 console.log("%c Project Version: "+projVersion, "background: #222; color: #bada55");
 
 //VARS------------------------------
@@ -201,9 +201,9 @@ function setupOrbitControls()
 
 function animateOptionals()
 {
-    if (cove != undefined){cove.visible = ShowModelledInfinityCove;}
+    if (cove != undefined){if (cove.visible != ShowModelledInfinityCove){cove.visible = ShowModelledInfinityCove;}}
 
-    if (floorDisc != undefined){floorDisc.visible = ShowFloorDisc;}
+    if (floorDisc != undefined){if (floordisc.visible != ShowFloorDisc){ floorDisc.visible = ShowFloorDisc;}}
 
     //if (house != undefined){house.rotation.y += 0.01;}
 
