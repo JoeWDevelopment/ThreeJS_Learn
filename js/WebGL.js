@@ -3,12 +3,12 @@
 //VARS------------------------------
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 50 , window.innerWidth / window.innerHeight, 0.1, 3000 );
+var sphere;
 var house;
 var cove;
 var exrCubeRenderTarget;
 var particle;
 var orbitcontrols
-
 var directionalLight;
 
 var ShowModelledInfinityCove = true;
@@ -43,6 +43,12 @@ camera.position.y = 8;
 camera.position.x = 18;
 //------------------------------
 
+
+//var geometry = new THREE.SphereGeometry( 5, 32, 32 );
+//var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+//sphere = new THREE.Mesh( geometry, material );
+//scene.add( sphere );
+
 setupOrbitControls();
 
 createEnvironmentMapTexture();
@@ -69,8 +75,8 @@ function animate()
     renderer.render( scene, camera );
 }
 
-var xSpeed = 0.1;
-var ySpeed = 0.1;
+var xSpeed = 0.5;
+var ySpeed = 0.5;
 
 document.addEventListener("keydown", onDocumentKeyDown, false);
 function onDocumentKeyDown(event) {
@@ -91,7 +97,7 @@ function onDocumentKeyDown(event) {
         directionalLight.position.set(0, 0, 0);
     }
 
-    console.log(directionalLight.position);
+    //console.log(directionalLight.position);
     renderer.render( scene, camera );
 };
 
@@ -223,6 +229,14 @@ function loadModel()
 
         house.traverse( function ( child ) 
         {
+            console.log(child.name);
+            if (child.name.toLowerCase() == "sun")
+            {
+                directionalLight.position.copy(child.position);
+                house.remove(child);
+                //sphere.position.copy(child.position);
+            }
+
             if ( child.isMesh ) 
             {
                 //child.material = newmaterial;
@@ -292,7 +306,7 @@ loader.load( coveAddress, function ( gltf ) {
     {
         if ( child.isMesh ) 
         {
-            //child.castShadow = true;
+            child.castShadow = false;
             child.receiveShadow = true;
             //child.material.roughness = 0;
         }
@@ -336,7 +350,7 @@ loader.load( discAddress, function ( gltf ) {
     {
         if ( child.isMesh ) 
         {
-            //child.castShadow = true;
+            child.castShadow = false;
             child.receiveShadow = true;
             //child.material = DiscMaterial;
             //child.material.transparent= true;
@@ -376,7 +390,7 @@ loader.load( 'model/Cove3.gltf', function ( gltf ) {
     {
         if ( child.isMesh ) 
         {
-            //child.castShadow = true;
+            child.castShadow = false;
             child.receiveShadow = true;
             //child.material.roughness = 0;
         }
