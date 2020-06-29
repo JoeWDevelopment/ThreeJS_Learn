@@ -44,7 +44,7 @@ camera.updateProjectionMatrix();
 renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-document.body.appendChild( renderer.domElement );
+//document.body.appendChild( renderer.domElement );
 /*/SHADOWS------------------------------
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
@@ -88,7 +88,7 @@ if (ObjsLoaded >= ObjsToLoad && loadCompleted == false)
       // hide the loading bar
     const loadingElem = document.querySelector('#loading');
     loadingElem.style.display = 'none';
-
+    document.body.appendChild( renderer.domElement );
 }
 if (!loadCompleted)
 {
@@ -203,7 +203,7 @@ function animateOptionals()
 {
     if (cove != undefined){if (cove.visible != ShowModelledInfinityCove){cove.visible = ShowModelledInfinityCove;}}
 
-    if (floorDisc != undefined){if (floordisc.visible != ShowFloorDisc){ floorDisc.visible = ShowFloorDisc;}}
+    if (floorDisc != undefined){if (floorDisc.visible != ShowFloorDisc){ floorDisc.visible = ShowFloorDisc;}}
 
     //if (house != undefined){house.rotation.y += 0.01;}
 
