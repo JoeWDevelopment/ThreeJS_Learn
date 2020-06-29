@@ -8,6 +8,9 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 50 , window.innerWidth / window.innerHeight, 0.1, 3000 );
 var sphere;
 var house;
+var furn1;
+var furn2;
+var furn3;
 var cove;
 var exrCubeRenderTarget;
 var particle;
@@ -21,10 +24,10 @@ var ShowModelledInfinityCove = true;
 var ShowFloorDisc = true;
 var ShowParticles = false;
 
-var ObjsToLoad = 3;
+var ObjsToLoad = 4;
 var ObjsLoaded = 0;
 
-var load1Percent = 0, load2Percent = 0, load3Percent = 0;
+var load1Percent = 0, load2Percent = 0, load3Percent = 0,load4Percent = 0;
 var loadPercent =0;
 var lastLoadPercent = -1;
 var loadCompleted = false;
@@ -70,6 +73,7 @@ createEnvironmentMapTexture();
 
 addLights();
 loadModel();
+loadFurniture();
 if (ShowModelledInfinityCove) {loadCove((1));}
 if (ShowParticles) {addParticles();}
 loadFloorDisc();
@@ -92,7 +96,7 @@ if (ObjsLoaded >= ObjsToLoad && loadCompleted == false)
 }
 if (!loadCompleted)
 {
-    loadPercent = (load1Percent+load2Percent+load3Percent) / 3;
+    loadPercent = (load1Percent+load2Percent+load3Percent+load4Percent) / 4;
     if (loadPercent > lastLoadPercent)
     {
     lastLoadPercent = loadPercent;
@@ -252,7 +256,8 @@ function loadModel()
 {
     var loader = new THREE.GLTFLoader();
     //var loadUrl = 'model/townhouse01.gltf';
-    var loadUrl = 'model/Baked/townhouse01.gltf';
+    //var loadUrl = 'model/Baked/townhouse01.gltf';
+    var loadUrl = 'model/Baked/House.glb';
 
     loader.load(loadUrl , function ( gltf ) {
 
@@ -350,6 +355,311 @@ function loadModel()
     }, undefined, function ( error ) {
         console.error( error );
     } );
+}
+
+
+function loadFurniture()
+{
+    var loader = new THREE.GLTFLoader();
+    //var loadUrl = 'model/townhouse01.gltf';
+    //var loadUrl = 'model/Baked/townhouse01.gltf';
+    var loadUrl = 'model/Baked/FurnGround.glb';
+
+    
+    loader.load(loadUrl , function ( gltf ) {
+
+        furn1 = gltf.scene;
+        scene.add( furn1 );
+
+        var GlassMaterial = new THREE.MeshPhysicalMaterial( {
+            map: null,
+            color: 0x1A1A1A,
+            metalness: 0,
+            roughness: 0,
+            opacity: 0.25,
+            side: THREE.FrontSide,
+            transparent: true,
+            envMapIntensity: 10,
+            premultipliedAlpha: true
+            } );
+
+
+            furn1.traverse( function ( child ) 
+        {
+            if ( child.isMesh ) 
+            {
+                //console.log(child.name+" : "+child.material.name);
+                switch (child.material.name.toLowerCase())
+                {
+                    case "floor":
+                        child.material.metalness = 0;
+                        child.material.roughness = .2;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = .4;
+                    break;
+                    case "darkmetal":
+                        child.material.metalness = 1;
+                        child.material.roughness = .25;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "kitchencolour":
+                        child.material.metalness = 1;
+                        child.material.roughness = 0.35;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "chrome":
+                        child.material.metalness = 1;
+                        child.material.roughness = 0;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "roof":
+                        child.material.metalness = 1;
+                        child.material.roughness = .25;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "ceramic":
+                        child.material.metalness = 1;
+                        child.material.roughness = .1;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    default:
+
+                    break;
+                }
+
+                if (child.material.name.toLowerCase() == "glass" || child.name.toLowerCase()== "glass")
+                {
+                    child.material = GlassMaterial;
+                    child.material.envMap = exrCubeRenderTarget.texture;
+                }
+
+            }
+        });
+
+        furn1.position.set(0,0,0);
+        ObjsLoaded+=1;
+    },
+    // called while loading is progressing
+    function ( xhr ) {
+        console.log("Furniture "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        load4Percent = xhr.loaded / xhr.total * 100;
+    }, undefined, function ( error ) {
+        console.error( error );
+    } );
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    var loader2 = new THREE.GLTFLoader();
+    //var loadUrl = 'model/townhouse01.gltf';
+    //var loadUrl = 'model/Baked/townhouse01.gltf';
+    var loadUrl2 = 'model/Baked/FurnMid.glb';
+
+    
+    loader2.load(loadUrl2 , function ( gltf ) {
+
+        furn2 = gltf.scene;
+        scene.add( furn2 );
+
+        var GlassMaterial = new THREE.MeshPhysicalMaterial( {
+            map: null,
+            color: 0x1A1A1A,
+            metalness: 0,
+            roughness: 0,
+            opacity: 0.25,
+            side: THREE.FrontSide,
+            transparent: true,
+            envMapIntensity: 10,
+            premultipliedAlpha: true
+            } );
+
+
+            furn2.traverse( function ( child ) 
+        {
+            if ( child.isMesh ) 
+            {
+                //console.log(child.name+" : "+child.material.name);
+                switch (child.material.name.toLowerCase())
+                {
+                    case "floor":
+                        child.material.metalness = 0;
+                        child.material.roughness = .2;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = .4;
+                    break;
+                    case "darkmetal":
+                        child.material.metalness = 1;
+                        child.material.roughness = .25;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "kitchencolour":
+                        child.material.metalness = 1;
+                        child.material.roughness = 0.35;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "chrome":
+                        child.material.metalness = 1;
+                        child.material.roughness = 0;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "roof":
+                        child.material.metalness = 1;
+                        child.material.roughness = .25;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "ceramic":
+                        child.material.metalness = 1;
+                        child.material.roughness = .1;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    default:
+
+                    break;
+                }
+
+                if (child.material.name.toLowerCase() == "glass" || child.name.toLowerCase()== "glass")
+                {
+                    child.material = GlassMaterial;
+                    child.material.envMap = exrCubeRenderTarget.texture;
+                }
+
+            }
+        });
+
+        furn2.position.set(0,0,0);
+        ObjsLoaded+=1;
+    },
+    // called while loading is progressing
+    function ( xhr ) {
+        console.log("Furniture "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        load4Percent = xhr.loaded / xhr.total * 100;
+    }, undefined, function ( error ) {
+        console.error( error );
+    } );
+
+
+
+
+
+
+
+
+
+    var loader3 = new THREE.GLTFLoader();
+    //var loadUrl = 'model/townhouse01.gltf';
+    //var loadUrl = 'model/Baked/townhouse01.gltf';
+    var loadUrl3 = 'model/Baked/FurnUpper.glb';
+
+    loader3.load(loadUrl3 , function ( gltf ) {
+
+        furn3 = gltf.scene;
+        scene.add( furn3 );
+
+        var GlassMaterial = new THREE.MeshPhysicalMaterial( {
+            map: null,
+            color: 0x1A1A1A,
+            metalness: 0,
+            roughness: 0,
+            opacity: 0.25,
+            side: THREE.FrontSide,
+            transparent: true,
+            envMapIntensity: 10,
+            premultipliedAlpha: true
+            } );
+
+
+            furn3.traverse( function ( child ) 
+        {
+            if ( child.isMesh ) 
+            {
+                //console.log(child.name+" : "+child.material.name);
+                switch (child.material.name.toLowerCase())
+                {
+                    case "floor":
+                        child.material.metalness = 0;
+                        child.material.roughness = .2;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = .4;
+                    break;
+                    case "darkmetal":
+                        child.material.metalness = 1;
+                        child.material.roughness = .25;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "kitchencolour":
+                        child.material.metalness = 1;
+                        child.material.roughness = 0.35;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "chrome":
+                        child.material.metalness = 1;
+                        child.material.roughness = 0;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "roof":
+                        child.material.metalness = 1;
+                        child.material.roughness = .25;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    case "ceramic":
+                        child.material.metalness = 1;
+                        child.material.roughness = .1;
+                        child.material.envMap = exrCubeRenderTarget.texture;
+                        child.material.envMapIntensity = 1;
+                    break;
+                    default:
+
+                    break;
+                }
+
+                if (child.material.name.toLowerCase() == "glass" || child.name.toLowerCase()== "glass")
+                {
+                    child.material = GlassMaterial;
+                    child.material.envMap = exrCubeRenderTarget.texture;
+                }
+
+            }
+        });
+
+        furn3.position.set(0,0,0);
+        ObjsLoaded+=1;
+    },
+    // called while loading is progressing
+    function ( xhr ) {
+        console.log("Furniture "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        load4Percent = xhr.loaded / xhr.total * 100;
+    }, undefined, function ( error ) {
+        console.error( error );
+    } );
+
+
+
+
+
+
+
 }
 
 
