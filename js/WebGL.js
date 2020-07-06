@@ -20,8 +20,8 @@ var directionalLight;
 var discMap;
 var floorDisc;
 
-var ShowModelledInfinityCove = true;
-var ShowFloorDisc = true;
+var ShowModelledInfinityCove = false;
+var ShowFloorDisc = false;
 var ShowParticles = false;
 
 var ObjsToLoad = 4;
@@ -56,9 +56,9 @@ renderer.setClearColor(0x000000, 0);
 
 
 //CAMERA------------------------------
-camera.position.z = -5;
-camera.position.y = 8;
-camera.position.x = 18;
+camera.position.z = -6;
+camera.position.y = 9;
+camera.position.x = 20;
 //------------------------------
 
 
