@@ -72,7 +72,7 @@ setupOrbitControls();
 createEnvironmentMapTexture();
 
 addLights();
-loadModel();
+//loadModel();
 loadFurniture();
 if (ShowModelledInfinityCove) {loadCove((1));}
 if (ShowParticles) {addParticles();}
@@ -230,6 +230,7 @@ new THREE.EXRLoader()
         exrBackground = exrCubeRenderTarget.texture;
 
         texture.dispose();
+        loadModel();
     });
 
 var pmremGenerator = new THREE.PMREMGenerator( renderer );
@@ -257,7 +258,7 @@ function loadModel()
     var loader = new THREE.GLTFLoader();
     //var loadUrl = 'model/townhouse01.gltf';
     //var loadUrl = 'model/Baked/townhouse01.gltf';
-    var loadUrl = 'model/Baked/House.glb';
+    var loadUrl = 'model/House.gltf';
 
     loader.load(loadUrl , function ( gltf ) {
 
@@ -363,7 +364,7 @@ function loadFurniture()
     var loader = new THREE.GLTFLoader();
     //var loadUrl = 'model/townhouse01.gltf';
     //var loadUrl = 'model/Baked/townhouse01.gltf';
-    var loadUrl = 'model/Baked/FurnGround.glb';
+    var loadUrl = 'model/FurnGround.gltf';
 
     
     loader.load(loadUrl , function ( gltf ) {
@@ -466,7 +467,7 @@ function loadFurniture()
     var loader2 = new THREE.GLTFLoader();
     //var loadUrl = 'model/townhouse01.gltf';
     //var loadUrl = 'model/Baked/townhouse01.gltf';
-    var loadUrl2 = 'model/Baked/FurnMid.glb';
+    var loadUrl2 = 'model/FurnMid.gltf';
 
     
     loader2.load(loadUrl2 , function ( gltf ) {
@@ -566,7 +567,7 @@ function loadFurniture()
     var loader3 = new THREE.GLTFLoader();
     //var loadUrl = 'model/townhouse01.gltf';
     //var loadUrl = 'model/Baked/townhouse01.gltf';
-    var loadUrl3 = 'model/Baked/FurnUpper.glb';
+    var loadUrl3 = 'model/FurnUpper.gltf';
 
     loader3.load(loadUrl3 , function ( gltf ) {
 
@@ -694,7 +695,7 @@ function loadCove(coveToLoad)
 
 loader.load( coveAddress, function ( gltf ) {
 
-    var coveMap = new THREE.TextureLoader().load( 'model/GreyGradient.jpg' );
+    var coveMap = new THREE.TextureLoader().load( 'model/tex/GreyGradient.jpg' );
 
     cove = gltf.scene;
     scene.add( cove );
@@ -729,9 +730,9 @@ loader.load( coveAddress, function ( gltf ) {
 
 function loadFloorDisc()
 {
-    var discMap = new THREE.TextureLoader().load( 'model/CirclePlaneBW.png' );//'model/CirclePlaneBWInvert.png'//'model/CirclePlane.png'
+    var discMap = new THREE.TextureLoader().load( 'model/tex/CirclePlaneBW.png' );//'model/CirclePlaneBWInvert.png'//'model/CirclePlane.png'
 
-       var discAddress = 'model/Baked/FloorDisc.gltf';
+       var discAddress = 'model/FloorDisc.gltf';
     var loader = new THREE.GLTFLoader();
 
 loader.load( discAddress, function ( gltf ) {
