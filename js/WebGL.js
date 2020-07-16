@@ -223,7 +223,7 @@ THREE.DefaultLoadingManager.onLoad = function ( )
 };
 new THREE.EXRLoader()
     .setDataType( THREE.FloatType )
-    .load( 'tex/colourfull homes_15.00.exr', function ( texture ) //GSG_PRO_STUDIOS_METAL_043_sm.exr
+    .load( 'tex/GSG_PRO_STUDIOS_METAL_002_sm.exr', function ( texture ) //GSG_PRO_STUDIOS_METAL_043_sm.exr//GSG_PRO_STUDIOS_METAL_002_sm.exr//tex/colourfull homes_15.00.exr
     {
         
         exrCubeRenderTarget = pmremGenerator.fromEquirectangular( texture );
@@ -258,7 +258,11 @@ function loadModel()
     var loader = new THREE.GLTFLoader();
     //var loadUrl = 'model/townhouse01.gltf';
     //var loadUrl = 'model/Baked/townhouse01.gltf';
-    var loadUrl = 'model/House.gltf';
+    var loadUrl = 'model/House.glb';
+
+    var dracoLoader = new THREE.DRACOLoader();
+    dracoLoader.setDecoderPath( 'js/three/examples/libs/draco/' );
+    loader.setDRACOLoader( dracoLoader )
 
     loader.load(loadUrl , function ( gltf ) {
 
@@ -364,8 +368,11 @@ function loadFurniture()
     var loader = new THREE.GLTFLoader();
     //var loadUrl = 'model/townhouse01.gltf';
     //var loadUrl = 'model/Baked/townhouse01.gltf';
-    var loadUrl = 'model/FurnGround.gltf';
+    var loadUrl = 'model/FurnGround.glb';
 
+    var dracoLoader = new THREE.DRACOLoader();
+    dracoLoader.setDecoderPath( 'js/three/examples/libs/draco/' );
+    loader.setDRACOLoader( dracoLoader )
     
     loader.load(loadUrl , function ( gltf ) {
 
@@ -467,7 +474,11 @@ function loadFurniture()
     var loader2 = new THREE.GLTFLoader();
     //var loadUrl = 'model/townhouse01.gltf';
     //var loadUrl = 'model/Baked/townhouse01.gltf';
-    var loadUrl2 = 'model/FurnMid.gltf';
+    var loadUrl2 = 'model/FurnMid.glb';
+
+    var dracoLoader = new THREE.DRACOLoader();
+    dracoLoader.setDecoderPath( 'js/three/examples/libs/draco/' );
+    loader2.setDRACOLoader( dracoLoader )
 
     
     loader2.load(loadUrl2 , function ( gltf ) {
@@ -567,7 +578,11 @@ function loadFurniture()
     var loader3 = new THREE.GLTFLoader();
     //var loadUrl = 'model/townhouse01.gltf';
     //var loadUrl = 'model/Baked/townhouse01.gltf';
-    var loadUrl3 = 'model/FurnUpper.gltf';
+    var loadUrl3 = 'model/FurnUpper.glb';
+
+    var dracoLoader = new THREE.DRACOLoader();
+    dracoLoader.setDecoderPath( 'js/three/examples/libs/draco/' );
+    loader3.setDRACOLoader( dracoLoader )
 
     loader3.load(loadUrl3 , function ( gltf ) {
 
@@ -693,6 +708,10 @@ function loadCove(coveToLoad)
 
     var loader = new THREE.GLTFLoader();
 
+    var dracoLoader = new THREE.DRACOLoader();
+    dracoLoader.setDecoderPath( 'js/three/examples/libs/draco/' );
+    loader.setDRACOLoader( dracoLoader )
+
 loader.load( coveAddress, function ( gltf ) {
 
     var coveMap = new THREE.TextureLoader().load( 'model/tex/GreyGradient.jpg' );
@@ -734,6 +753,9 @@ function loadFloorDisc()
 
        var discAddress = 'model/FloorDisc.gltf';
     var loader = new THREE.GLTFLoader();
+    var dracoLoader = new THREE.DRACOLoader();
+    dracoLoader.setDecoderPath( 'js/three/examples/libs/draco/' );
+    loader.setDRACOLoader( dracoLoader )
 
 loader.load( discAddress, function ( gltf ) {
 
@@ -783,6 +805,9 @@ loader.load( discAddress, function ( gltf ) {
 function loadCoveOld()
 {
 var loader = new THREE.GLTFLoader();
+var dracoLoader = new THREE.DRACOLoader();
+    dracoLoader.setDecoderPath( 'js/three/examples/libs/draco/' );
+    loader.setDRACOLoader( dracoLoader )
 
 loader.load( 'model/Cove3.gltf', function ( gltf ) {
 
