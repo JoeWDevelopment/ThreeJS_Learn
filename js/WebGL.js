@@ -47,7 +47,7 @@ camera.updateProjectionMatrix();
 renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-//document.body.appendChild( renderer.domElement );
+document.body.appendChild( renderer.domElement );
 /*/SHADOWS------------------------------
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
@@ -90,9 +90,9 @@ if (ObjsLoaded >= ObjsToLoad && loadCompleted == false)
     //console.log("Loading Complete");
     loadCompleted = true;
       // hide the loading bar
-    const loadingElem = document.querySelector('#loading');
-    loadingElem.style.display = 'none';
-    document.body.appendChild( renderer.domElement );
+    //const loadingElem = document.querySelector('#loading');
+    //loadingElem.style.display = 'none';
+    //document.body.appendChild( renderer.domElement );
 }
 if (!loadCompleted)
 {
@@ -101,7 +101,7 @@ if (!loadCompleted)
     {
     lastLoadPercent = loadPercent;
     //console.log("Loading... "+loadPercent+"%");  
-    const loadingElem = document.querySelector('#loading').innerHTML = "...loading..."+loadPercent+"%";
+    //const loadingElem = document.querySelector('#loading').innerHTML = "...loading..."+loadPercent+"%";
     }
 }
     requestAnimationFrame( animate );
