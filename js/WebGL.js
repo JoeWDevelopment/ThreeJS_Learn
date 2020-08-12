@@ -33,7 +33,7 @@ var lastLoadPercent = -1;
 var loadCompleted = false;
 //------------------------------
 
-createButtons();
+//createButtons();
 
 var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -87,7 +87,7 @@ function animate()
 {
 if (ObjsLoaded >= ObjsToLoad && loadCompleted == false)
 {
-    console.log("Loading Complete");
+    //console.log("Loading Complete");
     loadCompleted = true;
       // hide the loading bar
     const loadingElem = document.querySelector('#loading');
@@ -100,7 +100,7 @@ if (!loadCompleted)
     if (loadPercent > lastLoadPercent)
     {
     lastLoadPercent = loadPercent;
-    console.log("Loading... "+loadPercent+"%");  
+    //console.log("Loading... "+loadPercent+"%");  
     const loadingElem = document.querySelector('#loading').innerHTML = "...loading..."+loadPercent+"%";
     }
 }
@@ -355,7 +355,7 @@ function loadModel()
     },
     // called while loading is progressing
     function ( xhr ) {
-        console.log("TownHouse "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        //console.log("TownHouse "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
         load1Percent = xhr.loaded / xhr.total * 100;
     }, undefined, function ( error ) {
         console.error( error );
@@ -454,7 +454,7 @@ function loadFurniture()
     },
     // called while loading is progressing
     function ( xhr ) {
-        console.log("Furniture "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        //console.log("Furniture "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
         load4Percent = xhr.loaded / xhr.total * 100;
     }, undefined, function ( error ) {
         console.error( error );
@@ -561,7 +561,7 @@ function loadFurniture()
     },
     // called while loading is progressing
     function ( xhr ) {
-        console.log("Furniture "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        //console.log("Furniture "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
         load4Percent = xhr.loaded / xhr.total * 100;
     }, undefined, function ( error ) {
         console.error( error );
@@ -664,7 +664,7 @@ function loadFurniture()
     },
     // called while loading is progressing
     function ( xhr ) {
-        console.log("Furniture "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        //console.log("Furniture "+  ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
         load4Percent = xhr.loaded / xhr.total * 100;
     }, undefined, function ( error ) {
         console.error( error );
@@ -738,8 +738,8 @@ loader.load( coveAddress, function ( gltf ) {
     },
     // called while loading is progressing
     function ( xhr ) {
-        console.log(xhr);
-        console.log("Cove "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        //console.log(xhr);
+        //console.log("Cove "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
         load2Percent = xhr.loaded / xhr.total * 100;
     }, undefined, function ( error ) {
         console.error( error );
@@ -791,7 +791,7 @@ loader.load( discAddress, function ( gltf ) {
     },
     // called while loading is progressing
     function ( xhr ) {
-        console.log("floorDisc "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+        //console.log("floorDisc "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
         load3Percent = xhr.loaded / xhr.total * 100;
     }, undefined, function ( error ) {
         console.error( error );
@@ -829,7 +829,7 @@ loader.load( 'model/Cove3.gltf', function ( gltf ) {
 },
 // called while loading is progressing
 function ( xhr ) {
-    console.log("Cove "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    //console.log("Cove "+ ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
     load3Percent = xhr.loaded / xhr.total * 100;
 }, undefined, function ( error ) {
     console.error( error );
